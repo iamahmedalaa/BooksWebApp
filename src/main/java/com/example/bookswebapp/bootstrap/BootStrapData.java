@@ -2,10 +2,10 @@ package com.example.bookswebapp.bootstrap;
 
 import com.example.bookswebapp.domain.Author;
 import com.example.bookswebapp.domain.Book;
-import com.example.bookswebapp.domain.Puplisher;
+import com.example.bookswebapp.domain.Publisher;
 import com.example.bookswebapp.repositories.AuthorRepository;
 import com.example.bookswebapp.repositories.BookRepository;
-import com.example.bookswebapp.repositories.PuplisherRepositroy;
+import com.example.bookswebapp.repositories.PublisherRepositroy;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,29 +14,36 @@ public class BootStrapData implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-    private final PuplisherRepositroy puplisherRepositroy;
 
-    public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PuplisherRepositroy puplisherRepositroy) {
+    private final PublisherRepositroy publisherRepositroy;
+
+    public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepositroy publisherRepositroy) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
-        this.puplisherRepositroy = puplisherRepositroy;
+        this.publisherRepositroy = publisherRepositroy;
     }
 
     @Override
     public void run(String... args) throws Exception {
         Author Alaa = new Author("Ahmed","Alaa");
         Book sui = new Book("Suiiiiii","123123");
-        Puplisher puplisher= new Puplisher();
-        puplisher.setName("");
-        puplisher.setAddress("");
-        puplisher.setCity("");
+
+        Publisher publisher = new Publisher();
+        publisher.setName("Alaa");
+        publisher.setAddress("zzz");
+        publisher.setCity("zzz");
+
+        publisherRepositroy.save(publisher);
 
         Alaa.getBooks().add(sui);
         sui.getAuthors().add(Alaa);
 
+        sui.setPublisher(publisher);
+        publisher.getBooks().add(sui);
+
         authorRepository.save(Alaa);
         bookRepository.save(sui);
-        puplisherRepositroy.save(puplisher);
+        publisherRepositroy.save(publisher);
 
         Author rod = new Author("Islam","Alaa");
         Book NoEJB = new Book("hahahahah","123456789");
@@ -47,8 +54,7 @@ public class BootStrapData implements CommandLineRunner {
         authorRepository.save(rod);
         bookRepository.save(NoEJB);
 
-        System.out.println("Started in BootStrap");
-        System.out.println("verify outPut: " + puplisherRepositroy.count());
+        System.out.println("Publisher Number of Books:  " + publisher.getBooks().size());
         System.out.println("Number of Books:- " + bookRepository.count());
     }
 }

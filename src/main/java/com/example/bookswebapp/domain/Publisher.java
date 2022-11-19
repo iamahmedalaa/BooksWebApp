@@ -1,13 +1,12 @@
 package com.example.bookswebapp.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-public class Puplisher {
+public class Publisher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -18,7 +17,12 @@ public class Puplisher {
     private String zip;
     private String address;
 
-    public Puplisher() {
+    @OneToMany
+    @JoinColumn(name = "publisher_id")
+    private Set<Book> books = new HashSet<>();
+
+
+    public Publisher() {
     }
 
     @Override
@@ -26,9 +30,9 @@ public class Puplisher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Puplisher puplisher = (Puplisher) o;
+        Publisher publisher = (Publisher) o;
 
-        return Objects.equals(id, puplisher.id);
+        return Objects.equals(id, publisher.id);
     }
 
     @Override
@@ -84,9 +88,17 @@ public class Puplisher {
         this.address = address;
     }
 
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
     @Override
     public String toString() {
-        return "Puplisher{" +
+        return "Publisher{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
